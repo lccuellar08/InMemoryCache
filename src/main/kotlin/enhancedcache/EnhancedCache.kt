@@ -6,10 +6,10 @@ import kotlin.time.TimeSource
 
 private data class EnhancedEntry<T>(val value: T, val timeToLive: TimeSource.Monotonic.ValueTimeMark?)
 
-class EnhancedCache<T>(val evictionPolicy: EvictionPolicy<T>? = null) {
+class EnhancedCache<T>(val capacity: Int = 10, val evictionPolicy: EvictionPolicy<T>? = null) {
     private val data: MutableMap<Int, EnhancedEntry<T>> = mutableMapOf()
     private val timeDelta: Duration = 3.seconds
-    private val MAXIMUM_CAPACITY = 10
+    private val MAXIMUM_CAPACITY = capacity
 
     fun put(key: Int, value: T, useTTL: Boolean = false) {
         val currentTime = TimeSource.Monotonic.markNow()
@@ -75,5 +75,9 @@ class EnhancedCache<T>(val evictionPolicy: EvictionPolicy<T>? = null) {
             println("$key -> $entry")
         }
         evictionPolicy?.print()
+    }
+
+    fun size(): Int {
+        return data.size
     }
 }

@@ -1,19 +1,19 @@
-package test.kotlin.simplecache
+package enhancedcache
 
-import main.kotlin.simplecache.SimpleCache
+import main.kotlin.enhancedcache.EnhancedCache
 import kotlin.test.Test
 import kotlin.test.BeforeTest
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
-import kotlin.test.assertFalse
 
-class SimpleCacheTest {
-    private lateinit var cache: SimpleCache<String>
+class EnhancedCacheBasicTest {
+    private lateinit var cache: EnhancedCache<String>
 
     @BeforeTest
     fun setup() {
-        cache = SimpleCache()
+        cache = EnhancedCache()
     }
 
     @Test

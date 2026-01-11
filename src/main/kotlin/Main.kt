@@ -5,7 +5,7 @@ import main.kotlin.enhancedcache.FIFOPolicy
 import main.kotlin.enhancedcache.LRUPolicy
 
 fun runFIFO() {
-    val cache = EnhancedCache<String>(FIFOPolicy())
+    val cache = EnhancedCache<String>(evictionPolicy =  FIFOPolicy())
     for(i in 0..20) {
         cache.put(i, "Test string: $i")
 //        cache.printCache()
@@ -14,7 +14,7 @@ fun runFIFO() {
 }
 
 fun runLRU() {
-    val cache = EnhancedCache<String>(LRUPolicy())
+    val cache = EnhancedCache<String>(evictionPolicy = LRUPolicy())
     for(i in 0..10) {
         cache.put(i, "Test string: $i")
 //        cache.printCache()
