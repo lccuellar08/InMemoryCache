@@ -1,19 +1,20 @@
-package main.kotlin.enhancedcache
+package main.kotlin.cache.enhanced
 
+import main.kotlin.cache.enhanced.EnhancedCacheEntry
+import main.kotlin.cache.enhanced.eviction.EvictionPolicy
+import main.kotlin.cache.core.Cache
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.TimeSource
 
-private data class EnhancedEntry<T>(val value: T, val timeToLive: TimeSource.Monotonic.ValueTimeMark?)
-
-class EnhancedCache<T>(val capacity: Int = 10, val evictionPolicy: EvictionPolicy<T>? = null) {
-    private val data: MutableMap<Int, EnhancedEntry<T>> = mutableMapOf()
+class EnhancedCache<K,V>(val capacity: Int = 10, val useTTL: Boolean = false, val evictionPolicy: EvictionPolicy<K,V>? = null) : Cache<K,V>{
+    private val data: MutableMap<K, EnhancedCacheEntry<V>> = mutableMapOf()
     private val timeDelta: Duration = 3.seconds
     private val MAXIMUM_CAPACITY = capacity
 
-    fun put(key: Int, value: T, useTTL: Boolean = false) {
+    override fun put(key: K, value: V) {
         val currentTime = TimeSource.Monotonic.markNow()
-        val newEntry = EnhancedEntry(value, if(useTTL) currentTime + timeDelta else null)
+        val newEntry = EnhancedCacheEntry(value, if(useTTL) currentTime + timeDelta else null)
 
         // Check if there is a new value in the key
         val currentValue = data[key]
@@ -46,7 +47,7 @@ class EnhancedCache<T>(val capacity: Int = 10, val evictionPolicy: EvictionPolic
         }
     }
 
-    fun get(key: Int): T? {
+    override fun get(key: K): V? {
         val entry = data[key] ?: return null
 
         if(entry.timeToLive != null && entry.timeToLive.hasPassedNow()) {
@@ -59,13 +60,13 @@ class EnhancedCache<T>(val capacity: Int = 10, val evictionPolicy: EvictionPolic
         return entry.value
     }
 
-    fun remove(key: Int): Boolean {
-        val removedValue = data.remove(key) ?: return false
+    override fun remove(key: K): Boolean {
+        data.remove(key) ?: return false
         evictionPolicy?.onRemove(key)
         return true
     }
 
-    fun clear() {
+    override fun clear() {
         data.clear()
         evictionPolicy?.onClear()
     }
@@ -77,7 +78,7 @@ class EnhancedCache<T>(val capacity: Int = 10, val evictionPolicy: EvictionPolic
         evictionPolicy?.print()
     }
 
-    fun size(): Int {
+    override fun size(): Int {
         return data.size
     }
 }

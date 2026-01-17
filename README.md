@@ -1,4 +1,5 @@
 # Kotlin Cache Implementation
+
 This project is an education exploration of cache design and key-value stores, implemented in Kotlin.
 The goal is to progressively build a cache system while learning common real-world caching concepts.
 ---
@@ -25,6 +26,7 @@ The project is organized into incremental levels of complexity:
 
 ## Testing
 Tests are written using kotlin.test
+
 Run test with:
 ```bash
 ./gradle test

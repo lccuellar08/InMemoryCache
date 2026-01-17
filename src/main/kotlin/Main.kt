@@ -1,11 +1,11 @@
 package main.kotlin
 
-import main.kotlin.enhancedcache.EnhancedCache
-import main.kotlin.enhancedcache.FIFOPolicy
-import main.kotlin.enhancedcache.LRUPolicy
+import main.kotlin.cache.enhanced.EnhancedCache
+import main.kotlin.cache.enhanced.eviction.FIFOPolicy
+import main.kotlin.cache.enhanced.eviction.LRUPolicy
 
 fun runFIFO() {
-    val cache = EnhancedCache<String>(evictionPolicy =  FIFOPolicy())
+    val cache = EnhancedCache<Int, String>(evictionPolicy =  FIFOPolicy())
     for(i in 0..20) {
         cache.put(i, "Test string: $i")
 //        cache.printCache()
@@ -14,7 +14,7 @@ fun runFIFO() {
 }
 
 fun runLRU() {
-    val cache = EnhancedCache<String>(evictionPolicy = LRUPolicy())
+    val cache = EnhancedCache<Int, String>(evictionPolicy = LRUPolicy())
     for(i in 0..10) {
         cache.put(i, "Test string: $i")
 //        cache.printCache()
@@ -36,16 +36,16 @@ fun runLRU() {
 }
 
 fun runMaxCapacity() {
-    val cache = EnhancedCache<String>()
+    val cache = EnhancedCache<Int, String>()
     for(i in 0..10) {
         cache.put(i, "Test string: $i")
     }
 }
 
 fun runTTL() {
-    val cache = EnhancedCache<String>()
+    val cache = EnhancedCache<Int, String>()
     cache.put(1, "Hello")
-    cache.put(2, "World!", true)
+    cache.put(2, "World!")
 
     cache.printCache()
 

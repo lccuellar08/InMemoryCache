@@ -1,7 +1,6 @@
-package enhancedcache
+package cache.ehanced.eviction
 
-import main.kotlin.enhancedcache.EnhancedCache
-import main.kotlin.enhancedcache.LRUPolicy
+import main.kotlin.cache.enhanced.eviction.LRUPolicy
 import kotlin.test.Test
 import kotlin.test.BeforeTest
 import kotlin.test.assertEquals
@@ -12,7 +11,7 @@ import kotlin.test.assertTrue
 
 class LRUPolicyTest {
 
-    private lateinit var policy: LRUPolicy<String>
+    private lateinit var policy: LRUPolicy<Int, String>
 
     @BeforeTest
     fun setup() {

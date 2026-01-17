@@ -1,6 +1,6 @@
-package test.kotlin.simplecache
+package cache.simple
 
-import main.kotlin.simplecache.SimpleCache
+import main.kotlin.cache.simple.SimpleCache
 import kotlin.test.Test
 import kotlin.test.BeforeTest
 import kotlin.test.assertEquals
@@ -9,7 +9,7 @@ import kotlin.test.assertTrue
 import kotlin.test.assertFalse
 
 class SimpleCacheTest {
-    private lateinit var cache: SimpleCache<String>
+    private lateinit var cache: SimpleCache<Int, String>
 
     @BeforeTest
     fun setup() {

@@ -1,6 +1,6 @@
-package enhancedcache
+package cache.ehanced
 
-import main.kotlin.enhancedcache.EnhancedCache
+import main.kotlin.cache.enhanced.EnhancedCache
 import kotlin.test.Test
 import kotlin.test.BeforeTest
 import kotlin.test.assertEquals
@@ -9,18 +9,18 @@ import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 class EnhancedCacheTTLTest {
-    private lateinit var cache: EnhancedCache<String>
+    private lateinit var cache: EnhancedCache<Int, String>
 
     @BeforeTest
     fun setup() {
-        cache = EnhancedCache()
+        cache = EnhancedCache(useTTL = true)
     }
 
     @Test
     fun `put and get returns the value within time period`() {
         val testKey = 1
         val testString = "Test String"
-        cache.put(testKey, testString, useTTL = true)
+        cache.put(testKey, testString)
 
         val returnValue = cache.get(testKey)
         assertEquals(testString, returnValue)
@@ -30,7 +30,7 @@ class EnhancedCacheTTLTest {
     fun `put and get does not return the value after time period`() {
         val testKey = 1
         val testString = "Test String"
-        cache.put(testKey, testString, useTTL = true)
+        cache.put(testKey, testString)
 
         Thread.sleep(3000)
 
@@ -42,10 +42,10 @@ class EnhancedCacheTTLTest {
     fun `value removed from cache after time period`() {
         val testKey = 1
         val testString = "Test String"
-        cache.put(testKey, testString, useTTL = true)
+        cache.put(testKey, testString)
 
         // put another key
-        cache.put(2, "Test String 2", useTTL = false)
+        cache.put(2, "Test String 2")
 
         Thread.sleep(3000)
         val returnValue = cache.get(testKey)

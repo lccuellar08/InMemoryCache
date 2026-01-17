@@ -1,7 +1,6 @@
-package enhancedcache
+package cache.ehanced.eviction
 
-import main.kotlin.enhancedcache.EnhancedCache
-import main.kotlin.enhancedcache.FIFOPolicy
+import main.kotlin.cache.enhanced.eviction.FIFOPolicy
 import kotlin.test.Test
 import kotlin.test.BeforeTest
 import kotlin.test.assertEquals
@@ -12,7 +11,7 @@ import kotlin.test.assertTrue
 
 class FIFOPolicyTest {
 
-    private lateinit var policy: FIFOPolicy<String>
+    private lateinit var policy: FIFOPolicy<Int, String>
 
     @BeforeTest
     fun setup() {

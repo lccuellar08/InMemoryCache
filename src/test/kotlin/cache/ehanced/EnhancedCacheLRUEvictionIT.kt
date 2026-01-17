@@ -1,14 +1,17 @@
-package enhancedcache
+package cache.ehanced
 
-import main.kotlin.enhancedcache.EnhancedCache
-import main.kotlin.enhancedcache.LRUPolicy
-import kotlin.test.*
+import main.kotlin.cache.enhanced.EnhancedCache
+import main.kotlin.cache.enhanced.eviction.LRUPolicy
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertNull
 
 class EnhancedCacheLRUEvictionIT {
 
-    private lateinit var cache: EnhancedCache<String>
+    private lateinit var cache: EnhancedCache<Int, String>
 
-    @BeforeTest
+    @BeforeEach
     fun setup() {
         cache = EnhancedCache(
             capacity = 3,

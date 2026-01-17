@@ -1,13 +1,13 @@
-package main.kotlin.enhancedcache
+package main.kotlin.cache.enhanced.eviction
 
 import main.kotlin.utils.DoublyLinkedList
 import main.kotlin.utils.DoublyNode
 
-class LRUPolicy<T> : EvictionPolicy<T> {
-    val keyMap: MutableMap<Int, DoublyNode<Int>> = mutableMapOf()
-    val doublyList = DoublyLinkedList<Int>()
+class LRUPolicy<K,V> : EvictionPolicy<K,V> {
+    val keyMap: MutableMap<K, DoublyNode<K>> = mutableMapOf()
+    val doublyList = DoublyLinkedList<K>()
 
-    override fun selectEvictionCandidate(): Int {
+    override fun selectEvictionCandidate(): K {
         // Return head
         val candidate = doublyList.first()
         if(candidate == null)
@@ -15,15 +15,15 @@ class LRUPolicy<T> : EvictionPolicy<T> {
         return candidate
     }
 
-    override fun onPut(key: Int, value: T) {
+    override fun onPut(key: K, value: V) {
         val newNode = doublyList.add(key)
         keyMap[key] = newNode
     }
 
-    override fun onGet(key: Int, isMiss: Boolean) {
+    override fun onGet(key: K, isMiss: Boolean) {
 //        println("Accessed $key")
         if(isMiss)
-            // Do nothing if it's a miss
+        // Do nothing if it's a miss
             return
 
         val thisNode = keyMap[key]
@@ -33,14 +33,14 @@ class LRUPolicy<T> : EvictionPolicy<T> {
         }
     }
 
-    override fun onRemove(key: Int) {
+    override fun onRemove(key: K) {
         val nodeToRemove = keyMap[key]
         keyMap.remove(key)
         if(nodeToRemove != null)
             doublyList.removeNode(nodeToRemove)
     }
 
-    override fun onUpdate(key: Int, value: T) {
+    override fun onUpdate(key: K, value: V) {
         val thisNode = keyMap[key]
         if(thisNode != null)
             doublyList.moveNodeToEnd(thisNode)

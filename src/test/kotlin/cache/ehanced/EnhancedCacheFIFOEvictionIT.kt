@@ -1,11 +1,11 @@
-package enhancedcache
+package cache.ehanced
 
-import main.kotlin.enhancedcache.EnhancedCache
-import main.kotlin.enhancedcache.FIFOPolicy
+import main.kotlin.cache.enhanced.EnhancedCache
+import main.kotlin.cache.enhanced.eviction.FIFOPolicy
 import kotlin.test.*
 
 class EnhancedCacheFIFOEvictionIT {
-    private lateinit var cache: EnhancedCache<String>
+    private lateinit var cache: EnhancedCache<Int, String>
 
     @BeforeTest
     fun setup() {

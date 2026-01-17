@@ -1,6 +1,6 @@
-package enhancedcache
+package cache.ehanced
 
-import main.kotlin.enhancedcache.EnhancedCache
+import main.kotlin.cache.enhanced.EnhancedCache
 import kotlin.test.Test
 import kotlin.test.BeforeTest
 import kotlin.test.assertEquals
@@ -9,7 +9,7 @@ import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 class EnhancedCacheBasicTest {
-    private lateinit var cache: EnhancedCache<String>
+    private lateinit var cache: EnhancedCache<Int, String>
 
     @BeforeTest
     fun setup() {

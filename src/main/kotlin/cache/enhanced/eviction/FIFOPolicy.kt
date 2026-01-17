@@ -1,27 +1,27 @@
-package main.kotlin.enhancedcache
+package main.kotlin.cache.enhanced.eviction
 
-class FIFOPolicy<T> : EvictionPolicy<T>{
-    private val valueQueue: MutableList<Int> = mutableListOf()
+class FIFOPolicy<K,V> : EvictionPolicy<K,V> {
+    private val valueQueue: MutableList<K> = mutableListOf()
 
-    override fun selectEvictionCandidate(): Int {
+    override fun selectEvictionCandidate(): K {
         return valueQueue.first()
     }
 
-    override fun onPut(key: Int, value: T) {
+    override fun onPut(key: K, value: V) {
         valueQueue.add(key)
     }
 
-    override fun onGet(key: Int, isMiss: Boolean) {
+    override fun onGet(key: K, isMiss: Boolean) {
         // Do nothing
     }
 
-    override fun onRemove(key: Int) {
+    override fun onRemove(key: K) {
         val indexToRemove = valueQueue.indexOf(key)
         if(indexToRemove != -1)
             valueQueue.removeAt(indexToRemove)
     }
 
-    override fun onUpdate(key: Int, value: T) {
+    override fun onUpdate(key: K, value: V) {
         // Do nothing
     }
 
