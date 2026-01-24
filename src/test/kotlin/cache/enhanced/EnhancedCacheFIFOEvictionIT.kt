@@ -1,4 +1,4 @@
-package cache.ehanced
+package cache.enhanced
 
 import main.kotlin.cache.enhanced.EnhancedCache
 import main.kotlin.cache.enhanced.eviction.FIFOPolicy

@@ -1,21 +1,22 @@
-package cache.ehanced
+package cache.concurrent
 
+import main.kotlin.cache.concurrent.SynchronizedCache
 import main.kotlin.cache.enhanced.EnhancedCache
 import main.kotlin.cache.enhanced.eviction.LRUPolicy
-import org.junit.jupiter.api.Tag
 import kotlin.test.*
 
-@Tag("stress")
-class ConcurrencyStressTest {
+class SynchronizedConcurrencyStressTest {
 
-    private lateinit var cache: EnhancedCache<Int, String>
+    private lateinit var cache: SynchronizedCache<Int, String>
+    private val capacity = 5
 
     @BeforeTest
     fun setup() {
-        cache = EnhancedCache(
-            capacity = 5,
+        val delegate = EnhancedCache<Int, String>(
+            capacity = capacity,
             evictionPolicy = LRUPolicy()
         )
+        cache = SynchronizedCache(delegate)
     }
 
     @Test
@@ -37,7 +38,7 @@ class ConcurrencyStressTest {
 
         // This should never be > capacity
         assertTrue(
-            cache.size() <= 5,
+            cache.size() <= capacity,
             "Cache size exceeded capacity: ${cache.size()}"
         )
     }
@@ -47,7 +48,7 @@ class ConcurrencyStressTest {
         val threads = List(10) {
             Thread {
                 repeat(1_000) {
-                    val keyID = (0..5).random()
+                    val keyID = (0..capacity).random()
                     cache.put(keyID, keyID.toString())
                     cache.get(keyID)
                 }
@@ -62,7 +63,7 @@ class ConcurrencyStressTest {
 
         // If eviction policy is broken, this may throw
         assertTrue(
-            cache.size() <= 5,
+            cache.size() <= capacity,
             "Cache size exceeded capacity: ${cache.size()}"
         )
     }

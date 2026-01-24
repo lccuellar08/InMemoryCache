@@ -21,14 +21,12 @@ class LRUPolicy<K,V> : EvictionPolicy<K,V> {
     }
 
     override fun onGet(key: K, isMiss: Boolean) {
-//        println("Accessed $key")
         if(isMiss)
         // Do nothing if it's a miss
             return
 
         val thisNode = keyMap[key]
         if(thisNode != null) {
-//            println("Moving $thisNode to end")
             doublyList.moveNodeToEnd(thisNode)
         }
     }
@@ -54,5 +52,14 @@ class LRUPolicy<K,V> : EvictionPolicy<K,V> {
     override fun print() {
         println(keyMap)
         println(doublyList)
+    }
+
+    override fun size(): Int {
+        assert(keyMap.size == doublyList.size())
+        return keyMap.size
+    }
+
+    override fun keys(): Set<K> {
+        return keyMap.keys
     }
 }

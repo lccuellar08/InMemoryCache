@@ -1,13 +1,10 @@
-package cache.ehanced.eviction
+package cache.enhanced.eviction
 
 import main.kotlin.cache.enhanced.eviction.LRUPolicy
 import kotlin.test.Test
 import kotlin.test.BeforeTest
 import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
-import kotlin.test.assertFalse
-import kotlin.test.assertNull
-import kotlin.test.assertTrue
 
 class LRUPolicyTest {
 

@@ -32,4 +32,12 @@ class FIFOPolicy<K,V> : EvictionPolicy<K,V> {
     override fun print() {
         println(valueQueue)
     }
+
+    override fun size(): Int {
+        return valueQueue.size
+    }
+
+    override fun keys(): Set<K> {
+        return valueQueue.toSet()
+    }
 }

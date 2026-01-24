@@ -1,19 +1,21 @@
-package cache.ehanced
+package cache.concurrent
 
-import main.kotlin.cache.enhanced.EnhancedCache
+import main.kotlin.cache.simple.SimpleCache
+import main.kotlin.cache.concurrent.AtomicCache
+import main.kotlin.cache.enhanced.eviction.LRUPolicy
 import kotlin.test.Test
 import kotlin.test.BeforeTest
 import kotlin.test.assertEquals
-import kotlin.test.assertFalse
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
+import kotlin.test.assertFalse
 
-class EnhancedCacheBasicTest {
-    private lateinit var cache: EnhancedCache<Int, String>
+class AtomicCacheTest {
+    private lateinit var cache: AtomicCache<Int, String>
 
     @BeforeTest
     fun setup() {
-        cache = EnhancedCache()
+        cache = AtomicCache(10, false, LRUPolicy<Int, String>())
     }
 
     @Test

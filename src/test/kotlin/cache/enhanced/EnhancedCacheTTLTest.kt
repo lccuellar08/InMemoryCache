@@ -1,12 +1,10 @@
-package cache.ehanced
+package cache.enhanced
 
 import main.kotlin.cache.enhanced.EnhancedCache
 import kotlin.test.Test
 import kotlin.test.BeforeTest
 import kotlin.test.assertEquals
-import kotlin.test.assertFalse
 import kotlin.test.assertNull
-import kotlin.test.assertTrue
 
 class EnhancedCacheTTLTest {
     private lateinit var cache: EnhancedCache<Int, String>

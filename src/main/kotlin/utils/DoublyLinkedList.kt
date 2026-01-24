@@ -33,6 +33,7 @@ class DoublyLinkedList<T> {
             size += 1
         } else {
             tail?.next = doublyNode
+            doublyNode.prev = tail
             tail = doublyNode
             size += 1
         }
@@ -43,8 +44,13 @@ class DoublyLinkedList<T> {
             head = head?.next
         } else if(doublyNode == tail){
             tail = tail?.prev
+            tail?.next = null
         } else {
-            doublyNode.prev?.next = doublyNode.next
+//            doublyNode.prev?.next = doublyNode.next
+            val prevNode = doublyNode.prev
+            val nextNode = doublyNode.next
+            prevNode?.next = nextNode
+            nextNode?.prev = prevNode
         }
 
         doublyNode.prev = null
@@ -94,6 +100,16 @@ class DoublyLinkedList<T> {
         return tempNode.value
     }
 
+    fun getNodeFromValue(value: T): DoublyNode<T>? {
+        var tempNode = head
+        while(tempNode != null) {
+            if(tempNode.value == value)
+                return tempNode
+            tempNode = tempNode.next
+        }
+        return null
+    }
+
     fun moveNodeToEnd(doublyNode: DoublyNode<T>) {
         removeNode(doublyNode)
         addNode(doublyNode)
@@ -121,5 +137,9 @@ class DoublyLinkedList<T> {
             tempNode = tempNode.next
         }
         return outStr
+    }
+
+    fun size(): Int {
+        return size
     }
 }

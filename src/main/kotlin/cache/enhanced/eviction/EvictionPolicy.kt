@@ -8,4 +8,6 @@ interface EvictionPolicy<K,V> {
     fun onUpdate(key: K, value: V)
     fun onClear()
     fun print()
+    fun size(): Int
+    fun keys(): Set<K>
 }
