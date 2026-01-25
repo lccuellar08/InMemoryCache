@@ -1,17 +1,20 @@
 package main.kotlin.cache.concurrent
 
 import main.kotlin.cache.enhanced.eviction.EvictionPolicy
-import main.kotlin.cache.core.Cache
 import main.kotlin.cache.enhanced.EnhancedCacheEntry
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
+import main.kotlin.cache.core.SuspendCache
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.TimeSource
 
-class AtomicCache<K,V> (val capacity: Int = 10, val useTTL: Boolean = false,  val evictionPolicy: EvictionPolicy<K,V>?) : Cache<K,V> {
+class CoroutineCache<K,V> (val capacity: Int = 10, val useTTL: Boolean = false,  val evictionPolicy: EvictionPolicy<K,V>?) : SuspendCache<K,V> {
     private val data: MutableMap<K, EnhancedCacheEntry<V>> = mutableMapOf()
     private val timeDelta: Duration = 3.seconds
 
-    private val cacheLock = Any()
+    // Coroutine-friendly lock
+    private val stateMutex = Mutex()
 
     private fun assertInvariants() {
         check(data.size <= capacity)
@@ -25,8 +28,8 @@ class AtomicCache<K,V> (val capacity: Int = 10, val useTTL: Boolean = false,  va
     /*
         Get: Retrieves value from cache. If TTL has passed, the element is removed from cache
     */
-    override fun get(key: K): V? {
-        synchronized(cacheLock) {
+    override suspend fun get(key: K): V? {
+        stateMutex.withLock {
             // 1 - Retrieve value from map
             val entry = data[key]
 
@@ -60,8 +63,8 @@ class AtomicCache<K,V> (val capacity: Int = 10, val useTTL: Boolean = false,  va
     /*
         Put: Add value to cache. If at capacity, get a key to remove from policy and remove it.
      */
-    override fun put(key: K, value: V) {
-        synchronized(cacheLock) {
+    override suspend fun put(key: K, value: V) {
+        stateMutex.withLock {
             val currentTime = TimeSource.Monotonic.markNow()
             val newEntry = EnhancedCacheEntry(value, if(useTTL) currentTime + timeDelta else null)
 
@@ -96,8 +99,8 @@ class AtomicCache<K,V> (val capacity: Int = 10, val useTTL: Boolean = false,  va
         }
     }
 
-    override fun remove(key: K): Boolean {
-        synchronized(cacheLock) {
+    override suspend fun remove(key: K): Boolean {
+        stateMutex.withLock {
             val removed = data.remove(key) != null
             if(removed)
                 evictionPolicy?.onRemove(key)
@@ -114,15 +117,15 @@ class AtomicCache<K,V> (val capacity: Int = 10, val useTTL: Boolean = false,  va
         evictionPolicy?.print()
     }
 
-    override fun clear() {
-        synchronized(cacheLock) {
+    override suspend fun clear() {
+        stateMutex.withLock {
             data.clear()
             evictionPolicy?.onClear()
         }
     }
 
-    override fun size(): Int {
-        synchronized(cacheLock) {
+    override suspend fun size(): Int {
+        stateMutex.withLock {
             return data.size
         }
     }
